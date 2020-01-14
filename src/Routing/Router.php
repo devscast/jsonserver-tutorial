@@ -2,10 +2,15 @@
 
 namespace Devscast\Routing;
 
+/**
+ * Class Router
+ * @package Devscast\Routing
+ * @author bernard-ng <ngandubernard@gmail.com>
+ */
 class Router
 {
     /**
-     * Proovide All Route
+     * Provide All Route
      *
      * @return array
      */

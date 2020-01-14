@@ -2,15 +2,23 @@
 
 namespace Devscast\Routing;
 
-
+/**
+ * Class Route
+ * @package Devscast\Routing
+ * @author bernard-ng <ngandubernard@gmail.com>
+ */
 class Route
 {
+    /** @var string */
     public string $regex;
 
+    /** @var string */
     public string $method;
 
+    /** @var string */
     public string $dataType;
 
+    /** @var array */
     public array $params = [];
 
     /**

@@ -4,15 +4,23 @@ namespace Devscast;
 
 use Devscast\Routing\Router;
 
-
+/**
+ * Class Server
+ * @package Devscast
+ * @author bernard-ng <ngandubernard@gmail.com>
+ */
 final class Server
 {
 
+    /** @var array */
     private array $postData = [];
 
+    /**
+     * Server constructor.
+     */
     public function __construct()
     {
-        $this->postsData = $_POST;
+        $this->postData = $_POST;
 
         // session will be use to simulate database storage
         if (session_status() === PHP_SESSION_NONE) {
@@ -33,10 +41,10 @@ final class Server
 
     /**
      * Handle HTTP Request
-     * @todo parse and use the request playload
      * @param string $route
      * @param string $method
      * @return void
+     * @todo parse and use the request playload
      */
     public function handleRequest(string $route, string $method): void
     {

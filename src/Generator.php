@@ -5,12 +5,20 @@ namespace Devscast;
 use Faker\Factory;
 use Faker\Generator as FakerGenerator;
 
+/**
+ * Class Generator
+ * @package Devscast
+ * @author bernard-ng <ngandubernard@gmail.com>
+ */
 final class Generator
 {
+    /** @var FakerGenerator */
     private FakerGenerator $faker;
 
+    /** @var array */
     private array $storage = [];
 
+    /** @var array */
     private const DATA_TYPES = [
         "posts",
         "users",
@@ -18,6 +26,9 @@ final class Generator
         "user"
     ];
 
+    /**
+     * Generator constructor.
+     */
     public function __construct()
     {
         $this->faker = Factory::create('fr_FR');
@@ -114,10 +125,11 @@ final class Generator
             }
             return $this->storage[$key];
         }
+        return null;
     }
 
     /**
-     * Data Generation Depeding from the type
+     * Data Generation
      *
      * @param string $type
      * @param array $params
