@@ -12,8 +12,10 @@ use Faker\Generator as FakerGenerator;
  */
 final class Generator
 {
-    /** @var FakerGenerator */
+
     private FakerGenerator $faker;
+
+    private Storage $storage;
 
     /** @var array */
     private const DATA_TYPES = [
@@ -29,26 +31,7 @@ final class Generator
     public function __construct()
     {
         $this->faker = Factory::create('fr_FR');
-    }
-
-    /**
-     * @param string $key
-     * @return array|null
-     * @author bernard-ng <ngandubernard@gmail.com>
-     */
-    public function getStorage(string $key): ?array
-    {
-        return $_SESSION[$key] ?? null;
-    }
-
-    /**
-     * @param string $key
-     * @param array $data
-     * @author bernard-ng <ngandubernard@gmail.com>
-     */
-    public function setStorage(string $key, array $data): void
-    {
-        $_SESSION[$key] = $data;
+        $this->storage = new Storage();
     }
 
     /**
@@ -59,14 +42,14 @@ final class Generator
      */
     private function generatePosts(int $number = 100): array
     {
-        if (!$this->getStorage('api_posts')) {
+        if (!$this->storage->has('api_posts')) {
             $data = [];
             for ($i = 1; $i <= $number; $i++) {
                 $data[] = $this->generatePost([$i], false);
             }
-            $this->setStorage('api_posts', $data);
+            $this->storage->set('api_posts', $data);
         }
-        return $this->getStorage('api_posts');
+        return $this->storage->get('api_posts');
     }
 
     /**
@@ -77,14 +60,14 @@ final class Generator
      */
     private function generateUsers(int $number = 100): array
     {
-        if (!$this->getStorage('api_users')) {
+        if (!$this->storage->has('api_users')) {
             $data = [];
             for ($i = 1; $i <= $number; $i++) {
                 $data[] = $this->generateUser([$i], false);
             }
-            $this->setStorage('api_users', $data);
+            $this->storage->set('api_users', $data);
         }
-        return $this->getStorage('api_users');
+        return $this->storage->get('api_users');
     }
 
     /**
@@ -136,10 +119,10 @@ final class Generator
     private function getFromStorage(string $key, array $data, bool $useStorage): ?array
     {
         if ($useStorage) {
-            if (!$this->getStorage($key)) {
-                $this->setStorage($key, $data);
+            if (!$this->storage->has($key)) {
+                $this->storage->set($key, $data);
             }
-            return $this->getStorage($key);
+            return $this->storage->get($key);
         }
         return $data;
     }

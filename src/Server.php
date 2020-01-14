@@ -12,25 +12,14 @@ use Devscast\Routing\Router;
 final class Server
 {
 
-    /** @var array */
-    private array $postData = [];
-
-    /**
-     * Server constructor.
-     */
-    public function __construct()
-    {
-        $this->postData = $_POST;
-    }
-
     /**
      * Handle OPTIONS request
      * @return void
      */
     public function handleOptionRequest(): void
     {
+        header("Allow: GET, POST, PUT, DELETE, PATCH, OPTIONS");
         $this->setResponseHeaders();
-        echo "GET, POST, PUT, DELETE, PATCH, OPTIONS";
     }
 
     /**
@@ -38,7 +27,6 @@ final class Server
      * @param string $route
      * @param string $method
      * @return void
-     * @todo parse and use the request playload
      */
     public function handleRequest(string $route, string $method): void
     {
@@ -53,18 +41,18 @@ final class Server
 
                 case $method === "POST":
                     $this->setResponseHeaders(201);
-                    echo json_encode($this->postData);
-                    break;
-
-                case $method === "DELETE":
-                    $this->setResponseHeaders(200);
-                    echo json_encode([]);
+                    echo file_get_contents('php://input');
                     break;
 
                 case $method === "PUT":
                 case $method === "PATCH":
                     $this->setResponseHeaders(200);
-                    echo json_encode($this->postData);
+                    echo file_get_contents('php://input');
+                    break;
+
+                case $method === "DELETE":
+                    $this->setResponseHeaders(200);
+                    echo json_encode([]);
                     break;
             }
         } else {
@@ -83,6 +71,7 @@ final class Server
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Headers: *");
         header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, PATCH, OPTIONS");
+        header("Content-Type: application/json");
         header("X-Powered-By: devscast");
         http_response_code($status);
     }
