@@ -21,12 +21,6 @@ final class Server
     public function __construct()
     {
         $this->postData = $_POST;
-
-        // session will be use to simulate database storage
-        if (session_status() === PHP_SESSION_NONE) {
-            session_name("devscast-jsonplaceholder");
-            session_start();
-        }
     }
 
     /**
@@ -54,7 +48,7 @@ final class Server
             switch ($method) {
                 case $method === "GET":
                     $this->setResponseHeaders(200);
-                    (new Generator())->getData($route->dataType, $route->params);
+                    echo (new Generator())->getData($route->dataType, $route->params);
                     break;
 
                 case $method === "POST":

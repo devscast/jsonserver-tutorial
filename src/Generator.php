@@ -16,9 +16,6 @@ final class Generator
     private FakerGenerator $faker;
 
     /** @var array */
-    private array $storage = [];
-
-    /** @var array */
     private const DATA_TYPES = [
         "posts",
         "users",
@@ -32,7 +29,26 @@ final class Generator
     public function __construct()
     {
         $this->faker = Factory::create('fr_FR');
-        $this->storage = $_SESSION;
+    }
+
+    /**
+     * @param string $key
+     * @return array|null
+     * @author bernard-ng <ngandubernard@gmail.com>
+     */
+    public function getStorage(string $key): ?array
+    {
+        return $_SESSION[$key] ?? null;
+    }
+
+    /**
+     * @param string $key
+     * @param array $data
+     * @author bernard-ng <ngandubernard@gmail.com>
+     */
+    public function setStorage(string $key, array $data): void
+    {
+        $_SESSION[$key] = $data;
     }
 
     /**
@@ -43,12 +59,14 @@ final class Generator
      */
     private function generatePosts(int $number = 100): array
     {
-        if (!isset($this->storage['api_posts'])) {
+        if (!$this->getStorage('api_posts')) {
+            $data = [];
             for ($i = 1; $i <= $number; $i++) {
-                $this->storage['api_posts'][] = $this->generatePost([$i], false);
+                $data[] = $this->generatePost([$i], false);
             }
+            $this->setStorage('api_posts', $data);
         }
-        return $this->storage['api_posts'];
+        return $this->getStorage('api_posts');
     }
 
     /**
@@ -59,12 +77,14 @@ final class Generator
      */
     private function generateUsers(int $number = 100): array
     {
-        if (!isset($this->storage['api_users'])) {
+        if (!$this->getStorage('api_users')) {
+            $data = [];
             for ($i = 1; $i <= $number; $i++) {
-                $this->storage['api_users'][] = $this->generateUser([$i], false);
+                $data[] = $this->generateUser([$i], false);
             }
+            $this->setStorage('api_users', $data);
         }
-        return $this->storage['api_users'];
+        return $this->getStorage('api_users');
     }
 
     /**
@@ -83,9 +103,7 @@ final class Generator
             'email' => $this->faker->email,
             'password' => \uniqid('password_')
         ];
-
-        $this->getFromStorage("api_users_{$id}", $user, $useStorage);
-        return $user;
+        return $this->getFromStorage("api_users_{$id}", $user, $useStorage);
     }
 
     /**
@@ -104,9 +122,7 @@ final class Generator
             'title' => $this->faker->words(3, true),
             'content' => $this->faker->sentences(3, true)
         ];
-
-        $this->getFromStorage("api_post_{$id}", $post, $useStorage);
-        return $post;
+        return $this->getFromStorage("api_post_{$id}", $post, $useStorage);
     }
 
     /**
@@ -120,12 +136,12 @@ final class Generator
     private function getFromStorage(string $key, array $data, bool $useStorage): ?array
     {
         if ($useStorage) {
-            if (!isset($this->storage[$key])) {
-                $this->storage[$key] = $data;
+            if (!$this->getStorage($key)) {
+                $this->setStorage($key, $data);
             }
-            return $this->storage[$key];
+            return $this->getStorage($key);
         }
-        return null;
+        return $data;
     }
 
     /**
@@ -140,19 +156,18 @@ final class Generator
         if (in_array($type, self::DATA_TYPES)) {
             switch ($type) {
                 case $type === "posts":
-                    $data = \json_encode($this->generatePosts());
+                    return \json_encode($this->generatePosts());
                     break;
                 case $type === "users":
-                    $data = \json_encode($this->generateUsers());
+                    return \json_encode($this->generateUsers());
                     break;
                 case $type === "post":
-                    $data = \json_encode($this->generatePost($params));
+                    return \json_encode($this->generatePost($params, true));
                     break;
                 case $type === "user":
-                    $data = \json_encode($this->generateUser($params));
+                    return \json_encode($this->generateUser($params, true));
                     break;
             }
-            return $data;
         }
         return null;
     }
