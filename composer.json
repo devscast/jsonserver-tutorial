@@ -1,0 +1,20 @@
+{
+    "name": "bernard-ng/jsonplaceholder",
+    "description": "local json placeholder",
+    "type": "project",
+    "license": "MIT",
+    "authors": [{
+        "name": "bernard-ng",
+        "email": "ngandubernard@gmail.com"
+    }],
+    "autoload": {
+        "psr-4": {
+            "Devscast\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {},
+    "require-dev": {
+        "fzaninotto/faker": "^1.9"
+    }
+}
