@@ -1,4 +1,4 @@
-# JsonPlaceHolder
+# [Learning Project] JsonPlaceHolder
 A hard coded PHP clone of https://jsonplaceholder.typicode.com
 . 
 You will need PHP 7.4 to run this project.
